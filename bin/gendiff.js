@@ -2,7 +2,8 @@
 
 import commander from 'commander';
 
-const program = commander.program;
+const program = commander.createCommand();
+
 program
   .description('Compares two configuration files and shows a difference.')
   .version('0.0.2');
@@ -13,5 +14,4 @@ program
 
 program.parse(process.argv);
 
-if(program.format) console.log(' - %s format', program.format);
-
+if (program.format) console.log(' - %s format', program.format);
