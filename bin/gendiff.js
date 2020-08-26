@@ -14,6 +14,27 @@ program
   .description('Compares two configuration files and shows a difference.')
   .version('0.0.2');
 
+const createDiffRow = (fieldName, fieldValue) => {
+  const { value, state } = fieldValue;
+  return `  ${state} ${fieldName}: ${value}`;
+};
+
+const generateDiffResult = (diffMap) => {
+  const rows = [];
+  rows.push('{');
+  Object.entries(diffMap).forEach((entry) => {
+    const [key, values] = entry;
+    const [value1, value2] = values;
+    rows.push(createDiffRow(key, value1));
+    if (value2) {
+      rows.push(createDiffRow(key, value2));
+    }
+  });
+  rows.push('}');
+
+  return rows.join("\n");
+};
+
 const genDiff = (dataJson1, dataJson2) => {
   const result = Object.entries(dataJson1).reduce((acc, entry) => {
     const [key, value] = entry;
@@ -34,7 +55,13 @@ const genDiff = (dataJson1, dataJson2) => {
     }
   });
 
-  return result;
+  const sortedResult = Object.keys(result)
+    .sort()
+    .reduce((acc, key) => ({
+      ...acc, [key]: result[key],
+    }), {});
+
+  return generateDiffResult(sortedResult);
 };
 
 const loadFileContent = (filepath) => {
@@ -53,40 +80,15 @@ const convertToJson = (content) => {
   }
 };
 
-const outputRow = (fieldName, fieldValue) => {
-  const { value, state } = fieldValue;
-  console.log(`  ${state} ${fieldName}: ${value}`);
-};
-
-const outputDiff = (diffMap) => {
-  console.log('{');
-  Object.entries(diffMap).forEach((entry) => {
-    const [key, values] = entry;
-    const [value1, value2] = values;
-    outputRow(key, value1);
-    if (value2) {
-      outputRow(key, value2);
-    }
-  });
-  console.log('}');
-};
-
 program
   .option('-f, --format [type]', 'output format')
   .arguments('<filepath1> <filepath2>')
   .action((filepath1, filepath2) => {
     const dataJson1 = convertToJson(loadFileContent(filepath1));
     const dataJson2 = convertToJson(loadFileContent(filepath2));
-
     const diff = genDiff(dataJson1, dataJson2);
 
-    const sortedDiff = Object.keys(diff)
-      .sort()
-      .reduce((acc, key) => ({
-        ...acc, [key]: diff[key],
-      }), {});
-
-    outputDiff(sortedDiff);
+    console.log(diff);
   });
 
 program.parse(process.argv);
