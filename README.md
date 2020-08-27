@@ -14,4 +14,9 @@ $ make install
 ```
 
 ## Example
+
+```sh
+$ gendiff /tmp/file1.json ../experiment/file2.json
+```
+
 [![asciicast](https://asciinema.org/connect/f9db8a92-48b7-45af-8982-ab59d7ff0d8b)](https://asciinema.org/connect/f9db8a92-48b7-45af-8982-ab59d7ff0d8b)
