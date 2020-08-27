@@ -1,23 +1,13 @@
 import fs from 'fs';
 import _ from 'lodash';
+import parse from './parser.js';
 
-const parse = (key, config1, config2) => {
-  const hasFirst = _.has(config1, key);
-  const hasSecond = _.has(config2, key);
+const render = (key, value, status) => `  ${status} ${key}: ${value}`;
+const renderModifiedOption = (key, value1, value2) => {
+  const deletedValue = render(key, value1, '-');
+  const addedValue = render(key, value2, '+');
 
-  if (hasFirst && !hasSecond) {
-    return `  - ${key}: ${config1[key]}\n`;
-  }
-
-  if (!hasFirst && hasSecond) {
-    return `  + ${key}: ${config2[key]}\n`;
-  }
-
-  if (config1[key] === config2[key]) {
-    return `    ${key}: ${config1[key]}\n`;
-  }
-
-  return `  - ${key}: ${config1[key]}\n  + ${key}: ${config2[key]}\n`;
+  return `${deletedValue}\n${addedValue}`;
 };
 
 const genDiff = (filepath1, filepath2) => {
@@ -28,10 +18,21 @@ const genDiff = (filepath1, filepath2) => {
   const sortedKeys = unionConfigKeys.sort();
 
   const result = sortedKeys.map((key) => {
-    return parse(key, config1, config2);
+    const status = parse(key, config1, config2);
+    switch (status) {
+      case 'deleted':
+        return render(key, config1[key], '-');
+      case 'added':
+        return render(key, config2[key], '+');
+      case 'modified':
+        return renderModifiedOption(key, config1[key], config2[key]);
+      case 'unmodified':
+      default:
+        return render(key, config2[key], ' ');
+    }
   });
 
-  return `{\n` + result.join('') + `}`;
+  return ['{', ...result, '}'].join('\n');
 };
 
 export default genDiff;
