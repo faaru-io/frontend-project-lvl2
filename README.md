@@ -2,6 +2,7 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/143a02400e033f986078/maintainability)](https://codeclimate.com/github/faaru-io/frontend-project-lvl2/maintainability)
 ![](https://github.com/faaru-io/frontend-project-lvl2/workflows/Node.js%20CI/badge.svg)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/143a02400e033f986078/test_coverage)](https://codeclimate.com/github/faaru-io/frontend-project-lvl2/test_coverage)
 
 ## Project "Generate Difference"
 Educational project of the school ["Hexlet"](https://ru.hexlet.io/?ref=231189).  
