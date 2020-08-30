@@ -35,3 +35,10 @@ test('genDiff mix json yaml', () => {
 
   expect(genDiff(config1, config2)).toEqual(expected);
 });
+
+test('genDiff ini', () => {
+  const config1 = getFixturePath('config1.ini');
+  const config2 = getFixturePath('config2.ini');
+
+  expect(genDiff(config1, config2)).toEqual(expected);
+});
