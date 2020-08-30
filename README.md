@@ -21,3 +21,9 @@ $ gendiff /tmp/file1.json ../experiment/file2.json
 ```
 
 [![asciicast](https://asciinema.org/connect/f9db8a92-48b7-45af-8982-ab59d7ff0d8b)](https://asciinema.org/connect/f9db8a92-48b7-45af-8982-ab59d7ff0d8b)
+
+```sh
+$ gendiff __fixtures__/config1.yml __fixtures__/config2.yml
+```
+
+[![asciicast](https://asciinema.org/a/UpbjSm83uUJRFveVbJ2wbXhfL)](https://asciinema.org/a/UpbjSm83uUJRFveVbJ2wbXhfL)
