@@ -1,6 +1,6 @@
-import fs from 'fs';
 import _ from 'lodash';
-import parse from './parser.js';
+import analyze from './analyzer.js';
+import getData from './parsers.js';
 
 const render = (key, value, status) => `  ${status} ${key}: ${value}`;
 const renderModifiedOption = (key, value1, value2) => {
@@ -11,14 +11,14 @@ const renderModifiedOption = (key, value1, value2) => {
 };
 
 const genDiff = (filepath1, filepath2) => {
-  const config1 = JSON.parse((fs.readFileSync(filepath1, 'utf-8')));
-  const config2 = JSON.parse((fs.readFileSync(filepath2, 'utf-8')));
+  const config1 = getData(filepath1);
+  const config2 = getData(filepath2);
 
   const unionConfigKeys = _.union(Object.keys(config1), Object.keys(config2));
   const sortedKeys = unionConfigKeys.sort();
 
   const result = sortedKeys.map((key) => {
-    const status = parse(key, config1, config2);
+    const status = analyze(key, config1, config2);
     switch (status) {
       case 'deleted':
         return render(key, config1[key], '-');

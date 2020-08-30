@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const parse = (key, config1, config2) => {
+const analyze = (key, config1, config2) => {
   const hasFirst = _.has(config1, key);
   const hasSecond = _.has(config2, key);
 
@@ -17,4 +17,4 @@ const parse = (key, config1, config2) => {
   return 'unmodified';
 };
 
-export default parse;
+export default analyze;
