@@ -1,26 +1,13 @@
-import { extname } from 'path';
+import _ from 'lodash';
 import yaml from 'js-yaml';
-import fs from 'fs';
 import ini from 'ini';
 
-const getData = (filepath) => {
-  const fileFormat = extname(filepath);
-  const content = fs.readFileSync(filepath, 'utf-8');
-
-  let parser;
-  switch (fileFormat) {
-    case '.yml':
-      parser = yaml.safeLoad;
-      break;
-    case '.ini':
-      parser = ini.parse;
-      break;
-    case '.json':
-    default:
-      parser = JSON.parse;
-  }
-
-  return parser(content);
+const parsers = {
+  yml: yaml.safeLoad,
+  ini: ini.parse,
+  json: JSON.parse,
 };
 
-export default getData;
+const getParser = (format) => _.get(parsers, format, parsers.json);
+
+export default getParser;

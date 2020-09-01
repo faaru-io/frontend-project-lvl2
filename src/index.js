@@ -1,38 +1,28 @@
 import _ from 'lodash';
-import analyze from './analyzer.js';
-import getData from './parsers.js';
+import { extname } from 'path';
+import fs from 'fs';
+import buildAst from './analyzer.js';
+import getParser from './parsers.js';
+import format from './formatter.js';
 
-const render = (key, value, status) => `  ${status} ${key}: ${value}`;
-const renderModifiedOption = (key, value1, value2) => {
-  const deletedValue = render(key, value1, '-');
-  const addedValue = render(key, value2, '+');
+const getFormat = (filepath) => {
+  const fileFormat = extname(filepath);
 
-  return `${deletedValue}\n${addedValue}`;
+  return _.trimStart(fileFormat, '.');
 };
 
 const genDiff = (filepath1, filepath2) => {
-  const config1 = getData(filepath1);
-  const config2 = getData(filepath2);
+  const format1 = getFormat(filepath1);
+  const format2 = getFormat(filepath2);
 
-  const unionConfigKeys = _.union(Object.keys(config1), Object.keys(config2));
-  const sortedKeys = unionConfigKeys.sort();
+  const parse1 = getParser(format1);
+  const parse2 = getParser(format2);
 
-  const result = sortedKeys.map((key) => {
-    const status = analyze(key, config1, config2);
-    switch (status) {
-      case 'deleted':
-        return render(key, config1[key], '-');
-      case 'added':
-        return render(key, config2[key], '+');
-      case 'modified':
-        return renderModifiedOption(key, config1[key], config2[key]);
-      case 'unmodified':
-      default:
-        return render(key, config2[key], ' ');
-    }
-  });
+  const config1 = parse1(fs.readFileSync(filepath1, 'utf-8'));
+  const config2 = parse2(fs.readFileSync(filepath2, 'utf-8'));
 
-  return ['{', ...result, '}'].join('\n');
+  const tree = buildAst(config1, config2);
+  return format(tree);
 };
 
 export default genDiff;
