@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
@@ -8,6 +7,4 @@ const parsers = {
   json: JSON.parse,
 };
 
-const getParser = (format) => _.get(parsers, format, parsers.json);
-
-export default getParser;
+export default (format, content) => parsers[format](content);
