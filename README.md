@@ -36,3 +36,27 @@ $ gendiff __fixtures__/config1.ini __fixtures__/config2.ini
 ```
 
 [![asciicast](https://asciinema.org/a/0i0AU40S2zoejUeLGRyAnK9WA)](https://asciinema.org/a/0i0AU40S2zoejUeLGRyAnK9WA)
+
+
+### Format to plain
+```sh
+$ $ gendiff --format plain __fixtures__/config1.json __fixtures__/config2.json
+```
+
+[![asciicast](https://asciinema.org/a/OVRhz5BxySj3Q2nk0OKJ7fn3B)](https://asciinema.org/a/OVRhz5BxySj3Q2nk0OKJ7fn3B)
+
+
+### Format to json
+```sh
+$ gendiff --format json __fixtures__/config1.json __fixtures__/config2.json
+```
+
+[![asciicast](https://asciinema.org/a/qKXqgjxPdIAsmicxia89618FS)](https://asciinema.org/a/qKXqgjxPdIAsmicxia89618FS)
+
+
+### Format to stylish
+```sh
+$ gendiff --format stylish __fixtures__/config1.json __fixtures__/config2.json
+```
+
+[![asciicast](https://asciinema.org/a/mBtvcevaGHJXI2eBYhk0wa6im)](https://asciinema.org/a/mBtvcevaGHJXI2eBYhk0wa6im)
