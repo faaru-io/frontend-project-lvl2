@@ -10,6 +10,14 @@ const buildAst = (config1, config2) => {
     const value1 = config1[key];
     const value2 = config2[key];
 
+    if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
+      return {
+        key,
+        state: 'children',
+        value: buildAst(value1, value2),
+      };
+    }
+
     if (!_.has(config1, key)) {
       return { key, state: 'added', value: value2 };
     }
