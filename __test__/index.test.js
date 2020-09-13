@@ -19,26 +19,26 @@ test('genDiff json', () => {
   const config1 = getFixturePath('config1.json');
   const config2 = getFixturePath('config2.json');
 
-  expect(genDiff(config1, config2)).toEqual(expected);
+  expect(genDiff(config1, config2, 'stylish')).toEqual(expected);
 });
 
 test('genDiff yaml', () => {
   const config1 = getFixturePath('config1.yml');
   const config2 = getFixturePath('config2.yml');
 
-  expect(genDiff(config1, config2)).toEqual(expected);
+  expect(genDiff(config1, config2, 'stylish')).toEqual(expected);
 });
 
 test('genDiff mix json yaml', () => {
   const config1 = getFixturePath('config1.json');
   const config2 = getFixturePath('config2.yml');
 
-  expect(genDiff(config1, config2)).toEqual(expected);
+  expect(genDiff(config1, config2, 'stylish')).toEqual(expected);
 });
 
 test('genDiff ini', () => {
   const config1 = getFixturePath('config1.ini');
   const config2 = getFixturePath('config2.ini');
 
-  expect(genDiff(config1, config2)).toEqual(expected);
+  expect(genDiff(config1, config2, 'stylish')).toEqual(expected);
 });
