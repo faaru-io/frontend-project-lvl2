@@ -11,10 +11,12 @@ const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', 
 
 let expected;
 let expectedPlain;
+let expectedJson;
 
 beforeAll(() => {
   expected = fs.readFileSync(getFixturePath('result.txt'), 'utf-8');
   expectedPlain = fs.readFileSync(getFixturePath('result-plain.txt'), 'utf-8');
+  expectedJson = fs.readFileSync(getFixturePath('result-json.txt'), 'utf-8');
 });
 
 test('genDiff json, formatter Stylish', () => {
@@ -50,4 +52,11 @@ test('genDiff json, formatter Plain', () => {
   const config2 = getFixturePath('config2.json');
 
   expect(genDiff(config1, config2, 'plain')).toEqual(expectedPlain);
+});
+
+test('genDiff json, formatter JSON', () => {
+  const config1 = getFixturePath('config1.json');
+  const config2 = getFixturePath('config2.json');
+
+  expect(genDiff(config1, config2, 'json')).toEqual(expectedJson);
 });
