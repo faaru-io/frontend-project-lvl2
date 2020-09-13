@@ -2,7 +2,7 @@ import { extname } from 'path';
 import fs from 'fs';
 import buildAst from './ast-builder.js';
 import getConfig from './parsers.js';
-import format from './formatters.js';
+import format from './formatter/index.js';
 
 const getFormat = (filepath) => {
   const fileFormat = extname(filepath);
