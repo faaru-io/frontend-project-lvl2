@@ -6,7 +6,6 @@ import format from './formatter/index.js';
 
 const getFormat = (filepath) => {
   const fileFormat = extname(filepath);
-
   return fileFormat.slice(1);
 };
 
@@ -18,6 +17,7 @@ const genDiff = (filepath1, filepath2, destFormat) => {
   const config2 = getConfig(format2, fs.readFileSync(filepath2, 'utf-8'));
 
   const tree = buildAst(config1, config2);
+
   return format(destFormat, tree);
 };
 

@@ -9,13 +9,12 @@ const myStringify = (node, level) => {
 
   const entries = Object.entries(node);
   const spaces = buildSpaces(level * 2);
-
-  const result2 = entries.map(([key, value]) => {
+  const result = entries.map(([key, value]) => {
     const subNode = myStringify(value, level + 2);
     return `${spaces}    ${key}: ${subNode}`;
   }).flat();
 
-  return ['{', ...result2, `${spaces}}`].join('\n');
+  return ['{', ...result, `${spaces}}`].join('\n');
 };
 
 const mapState = {

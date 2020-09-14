@@ -2,10 +2,10 @@ import formatStylish from './stylish.js';
 import formatPlain from './plain.js';
 import formatJson from './json.js';
 
-const index = {
+const formatter = {
   stylish: formatStylish,
   plain: formatPlain,
   json: formatJson,
 };
 
-export default (format, astTree) => index[format](astTree);
+export default (format, astTree) => formatter[format](astTree);
