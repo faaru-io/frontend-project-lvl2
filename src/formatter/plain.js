@@ -1,54 +1,38 @@
-import _ from 'lodash';
-
-const createPropertyKey = (parent, key) => (
-  parent !== '' ? `${parent}.${key}` : key
-);
-
 const convertValueToString = (value) => {
-  if (_.isObject(value)) {
-    return '[complex value]';
+  switch (typeof value) {
+    case 'object':
+      return '[complex value]';
+    case 'string':
+      return `'${value}'`;
+    case 'boolean':
+    case 'number':
+    default:
+      return value;
   }
-
-  if (_.isString(value)) {
-    return `'${value}'`;
-  }
-
-  return value;
-};
-
-const mapState = {
-  added: (parent, node) => (
-    `Property '${createPropertyKey(parent, node.key)}' was added with value: ${convertValueToString(node.value)}`
-  ),
-  deleted: (parent, node) => (
-    `Property '${createPropertyKey(parent, node.key)}' was removed`
-  ),
-  unchanged: () => {},
-  changed: (parent, node) => {
-    const valueOldString = convertValueToString(node.value.old);
-    const valueNewString = convertValueToString(node.value.new);
-
-    return `Property '${createPropertyKey(parent, node.key)}' was updated. From ${valueOldString} to ${valueNewString}`;
-  },
 };
 
 const format = (tree) => {
-  const iter = (nodes, parent) => {
-    const result = nodes.map((node) => {
-      if (node.state === 'children') {
-        return iter(node.value, createPropertyKey(parent, node.key));
-      }
+  const mapState = {
+    added: (propertyKeys, node) => (
+      [`Property '${propertyKeys.join('.')}' was added with value: ${convertValueToString(node.value)}`]
+    ),
+    deleted: (propertyKeys) => [`Property '${propertyKeys.join('.')}' was removed`],
+    unchanged: () => [],
+    changed: (propertyKeys, node) => {
+      const property = propertyKeys.join('.');
+      const valueOldString = convertValueToString(node.value.old);
+      const valueNewString = convertValueToString(node.value.new);
 
-      const formatState = mapState[node.state];
-      return formatState(parent, node);
-    });
-
-    return result.flat();
+      return [`Property '${property}' was updated. From ${valueOldString} to ${valueNewString}`];
+    },
+    children: (propertyKeys, node) => iter(node.value, propertyKeys),
   };
 
-  return iter(tree, '')
-    .filter((row) => row !== undefined)
-    .join('\n');
+  const iter = (nodes, parentKeys) => (
+    nodes.flatMap((node) => mapState[node.state]([...parentKeys, node.key], node))
+  );
+
+  return iter(tree, []).join('\n');
 };
 
 export default format;

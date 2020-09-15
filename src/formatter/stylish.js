@@ -26,7 +26,7 @@ const mapState = {
 const format = (tree) => {
   const iter = (nodes, level) => {
     const spaces = buildSpaces(level * 2);
-    const result = nodes.map((node) => {
+    return nodes.flatMap((node) => {
       if (node.state === 'children') {
         return [`${spaces}  ${node.key}: {`, ...iter(node.value, level + 2), `${spaces}  }`];
       }
@@ -41,8 +41,6 @@ const format = (tree) => {
       const formatState = mapState[node.state];
       return formatState(node.key, myStringify(node.value, level + 1), spaces);
     });
-
-    return result.flat();
   };
 
   return ['{', ...iter(tree, 1), '}'].join('\n');
