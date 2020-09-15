@@ -8,4 +8,4 @@ const formatter = {
   json: formatJson,
 };
 
-export default (format, astTree) => formatter[format](astTree);
+export default (format, ast) => formatter[format](ast);

@@ -4,35 +4,37 @@ const convertValueToString = (value) => {
       return '[complex value]';
     case 'string':
       return `'${value}'`;
-    case 'boolean':
-    case 'number':
     default:
       return value;
   }
 };
 
-const format = (tree) => {
-  const mapState = {
-    added: (propertyKeys, node) => (
-      [`Property '${propertyKeys.join('.')}' was added with value: ${convertValueToString(node.value)}`]
-    ),
-    deleted: (propertyKeys) => [`Property '${propertyKeys.join('.')}' was removed`],
-    unchanged: () => [],
-    changed: (propertyKeys, node) => {
-      const property = propertyKeys.join('.');
-      const valueOldString = convertValueToString(node.value.old);
-      const valueNewString = convertValueToString(node.value.new);
+const mapType = {
+  added: (node, propertyKeys) => {
+    const property = [...propertyKeys, node.key].join('.');
+    return [`Property '${property}' was added with value: ${convertValueToString(node.value)}`];
+  },
+  deleted: (node, propertyKeys) => {
+    const property = [...propertyKeys, node.key].join('.');
+    return [`Property '${property}' was removed`];
+  },
+  unchanged: () => [],
+  changed: (node, propertyKeys) => {
+    const property = [...propertyKeys, node.key].join('.');
+    const valueOldString = convertValueToString(node.value.old);
+    const valueNewString = convertValueToString(node.value.new);
 
-      return [`Property '${property}' was updated. From ${valueOldString} to ${valueNewString}`];
-    },
-    children: (propertyKeys, node) => iter(node.value, propertyKeys),
-  };
+    return [`Property '${property}' was updated. From ${valueOldString} to ${valueNewString}`];
+  },
+  children: (node, propertyKeys, cb) => cb(node.value, [...propertyKeys, node.key]),
+};
 
+const format = (ast) => {
   const iter = (nodes, parentKeys) => (
-    nodes.flatMap((node) => mapState[node.state]([...parentKeys, node.key], node))
+    nodes.flatMap((node) => mapType[node.type](node, parentKeys, iter))
   );
 
-  return iter(tree, []).join('\n');
+  return iter(ast, []).join('\n');
 };
 
 export default format;

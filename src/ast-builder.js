@@ -13,23 +13,23 @@ const buildAst = (config1, config2) => {
     if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
       return {
         key,
-        state: 'children',
+        type: 'children',
         value: buildAst(value1, value2),
       };
     }
 
     if (!_.has(config1, key)) {
-      return { key, state: 'added', value: value2 };
+      return { key, type: 'added', value: value2 };
     }
 
     if (!_.has(config2, key)) {
-      return { key, state: 'deleted', value: value1 };
+      return { key, type: 'deleted', value: value1 };
     }
 
     if (value1 !== value2) {
       return {
         key,
-        state: 'changed',
+        type: 'changed',
         value: {
           old: value1,
           new: value2,
@@ -37,7 +37,7 @@ const buildAst = (config1, config2) => {
       };
     }
 
-    return { key, state: 'unchanged', value: value1 };
+    return { key, type: 'unchanged', value: value1 };
   });
 };
 

@@ -23,27 +23,27 @@ const mapState = {
   unchanged: (key, value, spaces) => `${spaces}  ${key}: ${value}`,
 };
 
-const format = (tree) => {
+const format = (ast) => {
   const iter = (nodes, level) => {
     const spaces = buildSpaces(level * 2);
     return nodes.flatMap((node) => {
-      if (node.state === 'children') {
+      if (node.type === 'children') {
         return [`${spaces}  ${node.key}: {`, ...iter(node.value, level + 2), `${spaces}  }`];
       }
 
-      if (node.state === 'changed') {
+      if (node.type === 'changed') {
         return [
           mapState.deleted(node.key, myStringify(node.value.old, level + 1), spaces),
           mapState.added(node.key, myStringify(node.value.new, level + 1), spaces),
         ];
       }
 
-      const formatState = mapState[node.state];
+      const formatState = mapState[node.type];
       return formatState(node.key, myStringify(node.value, level + 1), spaces);
     });
   };
 
-  return ['{', ...iter(tree, 1), '}'].join('\n');
+  return ['{', ...iter(ast, 1), '}'].join('\n');
 };
 
 export default format;
