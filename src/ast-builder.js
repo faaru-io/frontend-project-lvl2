@@ -22,8 +22,9 @@ const buildAst = (config1, config2) => {
       return { key, type: 'deleted', value: value1 };
     }
 
-    if (value1 !== value2) {
-      return {
+    return value1 === value2
+      ? { key, type: 'unchanged', value: value1 }
+      : {
         key,
         type: 'changed',
         value: {
@@ -31,9 +32,6 @@ const buildAst = (config1, config2) => {
           new: value2,
         },
       };
-    }
-
-    return { key, type: 'unchanged', value: value1 };
   });
 };
 
