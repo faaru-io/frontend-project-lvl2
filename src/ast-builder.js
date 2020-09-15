@@ -13,11 +13,9 @@ const buildAst = (config1, config2) => {
     if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
       return { key, type: 'children', value: buildAst(value1, value2) };
     }
-
     if (!_.has(config1, key)) {
       return { key, type: 'added', value: value2 };
     }
-
     if (!_.has(config2, key)) {
       return { key, type: 'deleted', value: value1 };
     }
