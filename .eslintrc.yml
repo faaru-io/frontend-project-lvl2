@@ -11,7 +11,7 @@ extends:
   - 'plugin:jest/recommended'
 
 parserOptions:
-  ecmaVersion: 8
+  ecmaVersion: 11
   sourceType: module
 
 rules:
