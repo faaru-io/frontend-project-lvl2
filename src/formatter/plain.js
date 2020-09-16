@@ -9,24 +9,26 @@ const convertValueToString = (value) => {
   }
 };
 
+const createPropertyPath = (...properties) => properties.join('.');
+
 const mapType = {
   added: (node, propertyKeys) => {
-    const property = [...propertyKeys, node.key].join('.');
+    const property = createPropertyPath(...propertyKeys, node.key);
     return [`Property '${property}' was added with value: ${convertValueToString(node.value)}`];
   },
   deleted: (node, propertyKeys) => {
-    const property = [...propertyKeys, node.key].join('.');
+    const property = createPropertyPath(...propertyKeys, node.key);
     return [`Property '${property}' was removed`];
   },
   unchanged: () => [],
   changed: (node, propertyKeys) => {
-    const property = [...propertyKeys, node.key].join('.');
+    const property = createPropertyPath(...propertyKeys, node.key);
     const valueOldString = convertValueToString(node.value.old);
     const valueNewString = convertValueToString(node.value.new);
 
     return [`Property '${property}' was updated. From ${valueOldString} to ${valueNewString}`];
   },
-  children: (node, propertyKeys, cb) => cb(node.value, [...propertyKeys, node.key]),
+  children: (node, propertyKeys, iter) => iter(node.value, [...propertyKeys, node.key]),
 };
 
 const format = (ast) => {

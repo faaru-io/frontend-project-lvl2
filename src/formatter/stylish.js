@@ -39,9 +39,9 @@ const mapType = {
       generateKeyValueString(node.key, node.value.new, '+', level),
     ]
   ),
-  children: (node, level, cb) => {
+  children: (node, level, iter) => {
     const spaces = buildSpaces(level);
-    return [`${spaces}  ${node.key}: {`, ...cb(node.value, level + 2), `${spaces}  }`];
+    return [`${spaces}  ${node.key}: {`, ...iter(node.value, level + 2), `${spaces}  }`];
   },
 };
 

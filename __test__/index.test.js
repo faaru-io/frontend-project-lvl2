@@ -9,54 +9,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-let expected;
-let expectedPlain;
-let expectedJson;
+const expectedFormatter = {};
 
 beforeAll(() => {
-  expected = fs.readFileSync(getFixturePath('result.txt'), 'utf-8');
-  expectedPlain = fs.readFileSync(getFixturePath('result-plain.txt'), 'utf-8');
-  expectedJson = fs.readFileSync(getFixturePath('result-json.txt'), 'utf-8');
+  expectedFormatter.stylish = fs.readFileSync(getFixturePath('result.txt'), 'utf-8');
+  expectedFormatter.plain = fs.readFileSync(getFixturePath('result-plain.txt'), 'utf-8');
+  expectedFormatter.json = fs.readFileSync(getFixturePath('result-json.txt'), 'utf-8');
 });
 
-test('genDiff json, formatter Stylish', () => {
-  const config1 = getFixturePath('config1.json');
-  const config2 = getFixturePath('config2.json');
-
-  expect(genDiff(config1, config2, 'stylish')).toEqual(expected);
-});
-
-test('genDiff yaml, formatter Stylish', () => {
-  const config1 = getFixturePath('config1.yml');
-  const config2 = getFixturePath('config2.yml');
-
-  expect(genDiff(config1, config2, 'stylish')).toEqual(expected);
-});
-
-test('genDiff mix json yaml, formatter Stylish', () => {
-  const config1 = getFixturePath('config1.json');
-  const config2 = getFixturePath('config2.yml');
-
-  expect(genDiff(config1, config2, 'stylish')).toEqual(expected);
-});
-
-test('genDiff ini, formatter Stylish', () => {
-  const config1 = getFixturePath('config1.ini');
-  const config2 = getFixturePath('config2.ini');
-
-  expect(genDiff(config1, config2, 'stylish')).toEqual(expected);
-});
-
-test('genDiff json, formatter Plain', () => {
-  const config1 = getFixturePath('config1.json');
-  const config2 = getFixturePath('config2.json');
-
-  expect(genDiff(config1, config2, 'plain')).toEqual(expectedPlain);
-});
-
-test('genDiff json, formatter JSON', () => {
-  const config1 = getFixturePath('config1.json');
-  const config2 = getFixturePath('config2.json');
-
-  expect(genDiff(config1, config2, 'json')).toEqual(expectedJson);
+test.each([
+  ['json', 'json', 'stylish'],
+  ['yml', 'yml', 'stylish'],
+  ['ini', 'ini', 'stylish'],
+  ['json', 'yml', 'stylish'],
+  ['json', 'json', 'plain'],
+  ['json', 'json', 'json'],
+])('genDiff(file1: %s, file2: %s) to formatter "%s"', (format1, format2, formatter) => {
+  const config1 = getFixturePath(`config1.${format1}`);
+  const config2 = getFixturePath(`config2.${format2}`);
+  expect(genDiff(config1, config2, formatter)).toEqual(expectedFormatter[formatter]);
 });
