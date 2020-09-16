@@ -23,7 +23,11 @@ test.each([
   ['ini', 'ini', 'stylish'],
   ['json', 'yml', 'stylish'],
   ['json', 'json', 'plain'],
+  ['yml', 'yml', 'plain'],
+  ['ini', 'ini', 'plain'],
   ['json', 'json', 'json'],
+  ['ini', 'ini', 'json'],
+  ['yml', 'yml', 'json'],
 ])('genDiff(file1: %s, file2: %s) to formatter "%s"', (format1, format2, formatter) => {
   const config1 = getFixturePath(`config1.${format1}`);
   const config2 = getFixturePath(`config2.${format2}`);
