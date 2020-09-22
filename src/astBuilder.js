@@ -7,28 +7,23 @@ const buildAst = (config1, config2) => {
   const sortedUnionConfigKeys = unionConfigKeys.sort();
 
   return sortedUnionConfigKeys.map((key) => {
-    const value1 = config1[key];
-    const value2 = config2[key];
-
-    if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
-      return { key, type: 'children', value: buildAst(value1, value2) };
-    }
     if (!_.has(config1, key)) {
-      return { key, type: 'added', value: value2 };
+      return { key, type: 'added', value: config2[key] };
     }
     if (!_.has(config2, key)) {
-      return { key, type: 'deleted', value: value1 };
+      return { key, type: 'deleted', value: config1[key] };
+    }
+    if (_.isPlainObject(config1[key]) && _.isPlainObject(config2[key])) {
+      return { key, type: 'complex', children: buildAst(config1[key], config2[key]) };
     }
 
-    return value1 === value2
-      ? { key, type: 'unchanged', value: value1 }
+    return config1[key] === config2[key]
+      ? { key, type: 'unchanged', value: config1[key] }
       : {
         key,
         type: 'changed',
-        value: {
-          old: value1,
-          new: value2,
-        },
+        valueOld: config1[key],
+        valueNew: config2[key],
       };
   });
 };

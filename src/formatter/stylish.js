@@ -11,7 +11,7 @@ const normalizeNodeValue = (node, level) => {
   const spaces = buildSpaces(level);
   const result = entries.flatMap(([key, value]) => {
     const subNode = normalizeNodeValue(value, level + 2);
-    return [`${spaces}    ${key}: ${subNode}`];
+    return `${spaces}    ${key}: ${subNode}`;
   });
 
   return ['{', ...result, `${spaces}}`].join('\n');
@@ -35,13 +35,13 @@ const mapType = {
   ),
   changed: (node, level) => (
     [
-      generateKeyValueString(node.key, node.value.old, '-', level),
-      generateKeyValueString(node.key, node.value.new, '+', level),
+      generateKeyValueString(node.key, node.valueOld, '-', level),
+      generateKeyValueString(node.key, node.valueNew, '+', level),
     ]
   ),
-  children: (node, level, iter) => {
+  complex: (node, level, iter) => {
     const spaces = buildSpaces(level);
-    return [`${spaces}  ${node.key}: {`, ...iter(node.value, level + 2), `${spaces}  }`];
+    return [`${spaces}  ${node.key}: {`, ...iter(node.children, level + 2), `${spaces}  }`];
   },
 };
 

@@ -14,21 +14,21 @@ const createPropertyPath = (...properties) => properties.join('.');
 const mapType = {
   added: (node, propertyKeys) => {
     const property = createPropertyPath(...propertyKeys, node.key);
-    return [`Property '${property}' was added with value: ${convertValueToString(node.value)}`];
+    return `Property '${property}' was added with value: ${convertValueToString(node.value)}`;
   },
   deleted: (node, propertyKeys) => {
     const property = createPropertyPath(...propertyKeys, node.key);
-    return [`Property '${property}' was removed`];
+    return `Property '${property}' was removed`;
   },
   unchanged: () => [],
   changed: (node, propertyKeys) => {
     const property = createPropertyPath(...propertyKeys, node.key);
-    const valueOldString = convertValueToString(node.value.old);
-    const valueNewString = convertValueToString(node.value.new);
+    const valueOldString = convertValueToString(node.valueOld);
+    const valueNewString = convertValueToString(node.valueNew);
 
-    return [`Property '${property}' was updated. From ${valueOldString} to ${valueNewString}`];
+    return `Property '${property}' was updated. From ${valueOldString} to ${valueNewString}`;
   },
-  children: (node, propertyKeys, iter) => iter(node.value, [...propertyKeys, node.key]),
+  complex: (node, propertyKeys, iter) => iter(node.children, [...propertyKeys, node.key]),
 };
 
 const format = (ast) => {
